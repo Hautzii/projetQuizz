@@ -3,13 +3,14 @@ import { ref } from 'vue'
 const questions = ref(0)
 const categories = ref(0)
 const difficulty = ref(0)
+const type = ref(0)
 </script>
 
 <template>
   <div>
-    <label for="questions">Nombre de questions</label>
+    <label for="questions">Number of questions</label>
     <input type="number" id="questions" v-model="questions" />
-    <label for="categories">Catégories</label>
+    <label for="categories">Categories</label>
     <select name="categories" id="categories" v-model="categories">
       <option value="0">Any category</option>
       <option value="1">General knowledge</option>
@@ -37,19 +38,20 @@ const difficulty = ref(0)
       <option value="23">Entertainment: Japanese Anime &amp; Manga</option>
       <option value="24">Entertainment: Cartoons &amp; Animations</option>
     </select>
-    <label for="difficulty">Difficulté</label>
+    <label for="difficulty">Difficulty</label>
     <select name="difficulty" id="difficulty" v-model="difficulty">
       <option value="any">Any difficulty</option>
       <option value="easy">Easy</option>
       <option value="medium">Medium</option>
       <option value="hard">Hard</option>
     </select>
-    <label for="type">Type de questions :</label>
-    <select name="type" id="type">
+    <label for="type">Type of questions :</label>
+    <select name="type" id="type" v-model="type">
       <option value="any">Any type</option>
       <option value="multiple">Multiple choice</option>
       <option value="boolean">True / False</option>
     </select>
+    <button>Generate</button>
   </div>
 </template>
 
