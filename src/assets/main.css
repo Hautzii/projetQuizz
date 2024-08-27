@@ -10,8 +10,8 @@
 body {
   background-color: #1e1e1e;
   color: #ffecd5;
-  display: flex;
+  /* display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: center; */
   height: 100vh;
 }
