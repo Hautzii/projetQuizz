@@ -1,46 +1,48 @@
 <script setup>
+  import MenuExtendedLayout from '@/layouts/MenuExtendedLayout.vue';
+  import ButtonBurger from '@/buttons/ButtonBurger.vue';
+  import MenuInBurgerLayout from '@/layouts/MenuInBurgerLayout.vue';
   import { RouterLink } from 'vue-router';
 </script>
 
 <template>
-        <nav>
-            <ul>
-                <li class="nav-link">
-                    <router-link class="nav-link" :to="{name: 'home'}">Accueil</router-link>
-                </li>
-                <li class="nav-link">
-                    <router-link class="nav-link" :to="{name: 'quiz'}">Jouer</router-link>
-                </li>
-                <li class="nav-link">
-                    <router-link class="nav-link" :to="{name: 'login'}">Se connecter</router-link>
-                </li>
-                <li class="nav-link">
-                    <router-link class="nav-link" :to="{name: 'signup'}">S'inscrire</router-link>
-                </li>
-            </ul>
-        </nav>
+  <header class="container">
+    <p>
+        <router-link class="nav-link" :to="{name: 'home'}">Projet Quizz</router-link>
+    </p>
+    <div class="extended-menu"><MenuExtendedLayout/></div>
+    <div class="burger-menu"><ButtonBurger/></div>
+    
+    <MenuInBurgerLayout/>
+  </header>
 </template>
 
 <style scoped>
-
-.nav-link {
-    text-decoration: none;
-    color: #1F1F1F;
-}
-
-ul {
-    margin: 0;
-    padding: 12px;
-    background-color: grey;
-    list-style-type: none;
+  .container {
+    background: rgb(75, 75, 75);
+    box-shadow: 0px 1px 1px 2px rgba(133, 131, 131, 0.900);
+    color: #ffecd5;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
+    padding: 0.5rem;
+  }
+
+  .nav-link {
+    text-decoration: none;
+    color: #ffecd5;
+    margin: 1rem;
 }
 
-li {
-    margin : 0 0.7rem;
-}
+  @media (max-width: 768px) {
+    .extended-menu {
+      display: none;
+    }
+  }
 
-
+  @media (min-width: calc(768px + 1px)) {
+    .burger-menu {
+      display: none;
+    }
+  }
 </style>

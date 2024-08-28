@@ -56,11 +56,18 @@ const quizz = [
 ]
 
 
-console.log(quizz);
+// console.log(quizz);
 
 const quizzIndex = ref(0);
+const currentQuestionIndex = ref (0);
+const isQuizCompleted = ref(false);
 
-// Navigation
+
+// Navigation : 
+
+function checkIfQuizCompleted() {
+  isQuizCompleted.value = answeredQuestions.value.every(answered => answered);
+}
 
 function nextQuestion () {
   if (quizzIndex.value < quizz.length - 1) {
@@ -74,19 +81,39 @@ function previousQuestion () {
   }
 }
 
-// Valider réponse
+
+// Valider réponse :
 
 const selectedAnswer = ref(null);
 const isAnswerCorrect = ref(null);
 
-function validateAnswer () {
+function validateAnswer() {
   const currentQuiz = quizz[quizzIndex.value];
   if (selectedAnswer.value === currentQuiz.correctAnswer) {
     isAnswerCorrect.value = true;
+    score.value++;
   } else {
     isAnswerCorrect.value = false;
   }
-};
+
+    answeredQuestions.value[quizzIndex.value] = true;
+    checkIfQuizCompleted(); 
+
+  if (quizzIndex.value < quizz.length - 1) {
+    quizzIndex.value++;
+    currentQuestionIndex.value = quizzIndex.value;
+  }
+
+  selectedAnswer.value = null;
+}
+
+// Suivre si une réponse a déjà été donnée :
+
+const answeredQuestions = ref(Array(quizz.length).fill(false));
+
+// Score :
+
+let score = ref(0);
 
 </script>
 
@@ -98,7 +125,7 @@ function validateAnswer () {
     
         <div class="quizz">
           <div class="question">
-            <p id="question">{{ quizz[quizzIndex].question }} </p>
+            <p id="question">{{ quizz[currentQuestionIndex].question }} </p>
           </div>
         
           <div class="answers">
@@ -109,15 +136,16 @@ function validateAnswer () {
           </div>
         
           <div class="validation">
-            <button class="validate-btn" @click="validateAnswer()">Validate</button>
-            <p v-if="isAnswerCorrect === true" class="green">Nice !</p>
-            <p v-else-if="isAnswerCorrect === false" class="red">False ! Try again :)</p>
-            <!-- <p v-else>Mauvaise réponse</p> -->
+            <button class="validate-btn" @click="validateAnswer()" :disabled="selectedAnswer === null || answeredQuestions[quizzIndex]">Validate</button>
+            <p v-if="isAnswerCorrect === true" class="green">Nice ! Score is : {{ score }} / {{ quizzIndex }} </p>
+            <p v-else-if="isAnswerCorrect === false" class="red">Too bad ! 
+              Score is {{ score }} / {{ quizzIndex }}
+            </p>
           </div>
         
-          <div class="navigation">
-            <button @click="previousQuestion()">Previous</button>
-            <button @click="nextQuestion()">Next</button>
+          <div class="navigation" v-if="isQuizCompleted">
+            <button @click="previousQuestion()" :disabled="quizzIndex === 0">Previous</button>
+            <button @click="nextQuestion()" :disabled="quizzIndex === quizz.length - 1">Next</button>
           </div>
         </div>
   </div>
@@ -127,7 +155,7 @@ function validateAnswer () {
 
 h1 {
   text-align: center;
-  margin: 2rem auto;
+  margin: 5rem auto;
 }
 
 
@@ -137,12 +165,32 @@ h1 {
   align-items: center;
   border: 1px solid #ffecd5;
   border-radius: 10px;
-  width: 80%;
+  width: 85%;
   margin: auto;
   padding: 2rem;
   box-shadow: 3px 3px 5px rgba(133, 131, 131, 0.900);
-
 }
+
+@media (max-width: calc(992px + 1px)) {
+
+    .quizz {
+      width: 95%;
+      box-shadow: none;
+    }
+
+    .question {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .answers {
+      display: flex;
+      flex-direction: column;
+    }
+  }
 
 .navigation {
   display: flex;
@@ -151,7 +199,7 @@ h1 {
 }
 
 .navigation button {
-  margin: 2rem 0.3rem 0 0.3rem;
+  margin: 1.25rem 0.4rem 0 0.4rem;
 }
 
 #question {
@@ -195,13 +243,50 @@ button {
   border: 1px solid black;
   background-color: #ffecd5;
   color: #1E1E1E;
-  width: 120px;
+  min-width: 120px;
 
   &:hover {
     background-color: #1E1E1E;
     color: #ffecd5;
     cursor: pointer;
     border: 1px solid yellow;
+  }
+}
+
+@media (max-width: calc(768px + 1px)) {
+  .validation {
+    width: 70%;
+  }
+
+  .validation p {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .navigation {
+    display: flex;
+    width: 70%;
+  }
+
+  .navigation button {
+    width: 70%;
+  }
+}
+
+@media (max-width: calc(992px + 1px)) {
+  .validation {
+    width: 50%;
+  }
+
+  .navigation {
+    display: flex;
+    width: 50%;
+  }
+
+  .navigation button {
+    width: 50%;
   }
 }
 
