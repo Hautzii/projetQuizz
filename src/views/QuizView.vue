@@ -205,7 +205,7 @@ const finishGame = () => {
       />
       <button :disabled="!isFormValid" class="submit-button">Play!</button>
     </form>
-    <div v-if="activeGame">
+    <div v-if="activeGame" class="active-game">
       <h1>Question {{ currentQuestionIndex + 1 }} of {{ numberOfQuestions }}</h1>
       <h2>{{ timerEnabled ? "Time Remaining:" : "Question:" }}</h2>
       <p v-if="timerEnabled" class="timer">{{ formattedTime }}</p>
@@ -228,7 +228,7 @@ const finishGame = () => {
         Submit
       </button>
     </div>
-    <div v-if="quizFinished">
+    <div v-if="quizFinished" class="quiz-finished">
       <h2>Quiz Finished!</h2>
       <p>Your final score: {{ score }} out of {{ numberOfQuestions }}</p>
       <div v-if="incorrectAnswers.length > 0">
@@ -240,8 +240,8 @@ const finishGame = () => {
             class="incorrect-answer-item"
           >
             <p><span>Question:</span> {{ item.question }}</p>
-            <p><span>Your answer:</span> {{ item.userAnswer }}</p>
-            <p><span>Correct answer:</span> {{ item.correctAnswer }}</p>
+            <p class="player-answer"><span>Your answer:</span> {{ item.userAnswer }}</p>
+            <p class="correct-answer"><span>Correct answer:</span> {{ item.correctAnswer }}</p>
           </li>
         </ul>
       </div>
@@ -283,6 +283,9 @@ form {
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: var(--text-color);
+  padding: 2rem 1.5rem;
+  border-radius: var(--border-radius);
 }
 
 li {
@@ -372,6 +375,8 @@ span {
 
 .incorrect-answers-list {
   padding: 0;
+  width: 100%; /* Ensure the list takes full width of the parent */
+  max-width: 600px; /* Limit the maximum width for better readability */
 }
 
 h1 {
@@ -380,6 +385,10 @@ h1 {
 
 h3 {
   margin-top: 1rem;
+}
+
+.player-answer, .correct-answer {
+  margin-top: 0.5rem;
 }
 
 .incorrect-answer-item {
@@ -414,5 +423,23 @@ input[type="number"] {
 
 .question {
   margin-top: 1rem;
+}
+.active-game, .quiz-finished {
+  background-color: var(--text-color);
+  width: 75vw;
+  padding: 2rem 1rem;
+  border-radius: 1rem;
+}
+
+.quiz-finished {
+  background-color: var(--text-color);
+  width: 75vw;
+  max-height: 80vh; /* Limit the maximum height */
+  padding: 2rem 1rem;
+  border-radius: 1rem;
+  overflow-y: auto; /* Add vertical scrollbar when content exceeds max-height */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 </style>
