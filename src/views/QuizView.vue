@@ -266,10 +266,12 @@ const finishGame = () => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  min-height: 100vh;
   text-align: center;
   max-width: 750px;
   margin: auto;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .game {
@@ -441,5 +443,55 @@ input[type="number"] {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+@media screen and (max-width: 767px) {
+  .main-container {
+    height: auto;
+    min-height: 100dvh;
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+  }
+
+  form {
+    width: 90%;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  select,
+  input[type="number"],
+  input[type="checkbox"] {
+    width: 100%;
+    max-width: 250px;
+  }
+
+  select,
+  input[type="number"],
+  input[type="checkbox"],
+  button {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .active-game,
+  .quiz-finished {
+    width: 90%;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+
+  .answer-buttons button {
+    width: 100%;
+    max-width: 250px;
+  }
 }
 </style>
