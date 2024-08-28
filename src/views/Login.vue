@@ -1,8 +1,10 @@
 <script setup>
 import { ref } from "vue";
 import { useUsers } from "@/composables/useUsers";
+import { useRouter } from 'vue-router';
 
 const { users, login, error } = useUsers();
+const router = useRouter();
 
 const email = ref("");
 const password = ref("");
@@ -10,11 +12,13 @@ const password = ref("");
 async function handleSubmit() {
   try {
     await login(email.value, password.value);
-    
+    router.push('/utilisateur'); 
   } catch (e) {
-    console.log("Error during login:", e);
+      console.log(e);
+      
+    }
   }
-}
+
 </script>
 
 <template>
@@ -33,16 +37,9 @@ async function handleSubmit() {
       <p v-if="error" class="error">{{ error }}</p>
       <p>
         Pas encore de compte ?
-        <router-link to="/">S'inscrire</router-link>
+        <router-link to="/inscription">S'inscrire</router-link>
       </p>
     </form>
-
-    <h2>Lire</h2>
-    <ul v-if="users">
-      <li v-for="u in users" :key="u.id">
-        {{ u.username }}
-      </li>
-    </ul>
   </div>
 </template>
 

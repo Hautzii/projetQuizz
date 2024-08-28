@@ -1,27 +1,42 @@
 <script setup>
-import { ref } from 'vue';
+import { ref } from "vue";
 import { useCreateUser } from "@/composables/useCreateUsers";
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 
 const { create } = useCreateUser();
 const router = useRouter();
 
-const username = ref('');
-const email = ref('');
-const password = ref('');
-const errorMessage = ref('');
-const successMessage = ref(false);
+const username = ref("");
+const email = ref("");
+const password = ref("");
+const showPassword = ref(false);
+const errorMessage = ref("");
+const successMessage = ref("");
 
 async function handleCreate() {
+  const user = {
+    username: username.value,
+    email: email.value,
+    password: password.value,
+  };
+
   try {
-    const user = { username: username.value, email: email.value, password: password.value };
     await create(user);
-    alert('Votre Inscription est OK')
-    router.push('/');
+    successMessage.value = "Utilisateur créé avec succès";
+    errorMessage.value = "";
+
+    username.value = "";
+    email.value = "";
+    password.value = "";
+    
+    // router.push("/connexion");
+    //setTimeout(() => router.push('/connexion'), 2000);
   } catch (e) {
-    errorMessage.value = e.message || "Une erreur est survenue lors de la création de votre compte.";
+      errorMessage.value = e.message;
+      successMessage.value = "";
+    }
   }
-}
+
 </script>
 
 <template>
@@ -38,17 +53,21 @@ async function handleCreate() {
       </div>
       <div>
         <label for="password">Mot de passe : </label>
-        <input type="password" v-model="password" id="password" required />
+        <input :type="showPassword ? 'text' : 'password'" v-model="password" id="password" required />
+      </div>
+      <div>
+        <input type="checkbox" id="show-password" v-model="showPassword" />
+        <label for="show-password">Afficher le mot de passe</label>
       </div>
       <button type="submit">S'inscrire</button>
       <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+      <p v-if="successMessage" class="success">{{ successMessage }}</p>
       <p>
-        Déjà un compte ? <router-link to="/">Se connecter</router-link>
+        Déjà un compte ? <router-link to="/connexion">Se connecter</router-link>
       </p>
     </form>
   </div>
 </template>
-
 
 <style scoped>
 .auth-container {
@@ -61,5 +80,8 @@ form div {
 }
 .error {
   color: red;
+}
+.success {
+  color: green; 
 }
 </style>

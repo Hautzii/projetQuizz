@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export function useDeleteUser() {
-    const API = 'http://localhost:3001/users';
+    const API = 'http://localhost:3000/users';
 
     async function remove(id) {
         try {
