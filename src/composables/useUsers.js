@@ -4,6 +4,7 @@ import axios from "axios";
 export function useUsers() {
   const API = "http://localhost:3000/users";
   const users = ref(null);
+  const loggedInUser = ref(null);
   const error = ref("");
   
   async function load() {
@@ -18,8 +19,14 @@ export function useUsers() {
 
   async function login(email, password) {
     try {
-      const res = await axios.get(API);
-      const user = res.data.find(user => user.email === email);
+      const res = await axios.get(API, {
+        params: { email }
+      });
+      console.log('cc', res.data);
+      
+      const normalizedEmail = email.trim().toLowerCase();
+
+      const user = res.data.find(user => user.email.toLowerCase() === normalizedEmail);
 
       if (!user) {
         throw new Error("EMAIL_NOT_FOUND");
@@ -28,6 +35,8 @@ export function useUsers() {
       if (user.password !== password) {
         throw new Error("PASSWORD_INCORRECT");
       }
+
+      loggedInUser.value = user;
       return user;
 
     } catch (e) {
@@ -44,9 +53,13 @@ export function useUsers() {
     }
   }
 
+  function setLoggedInUser(user) {
+    loggedInUser.value = user;
+  }
+
   onMounted(() => {
     load();
   });
 
-  return { users, error, load, login };
+  return { users, error, load, login, setLoggedInUser, loggedInUser };
 }

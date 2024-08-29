@@ -1,18 +1,9 @@
 import axios from "axios";
-//import { isValidEmail, isValidPassword } from "./validator";
-
-function isValidEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-}
-
-function isValidPassword(password) {
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&\-_])[A-Za-z\d@$!%*?&\-_]{8,}$/;
-    return passwordRegex.test(password);
-}
+import { useValidator } from "./useValidator";
 
 export function useCreateUser() {
-    const API = 'http://localhost:3000/users';
+    const API = 'http://localhost:3000/users/';
+    const { isValidEmail, isValidPassword } = useValidator();
 
     async function create(user) {
 
