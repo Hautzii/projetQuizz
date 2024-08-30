@@ -7,11 +7,11 @@ export function useUpdateUser() {
 
     async function update(id, user) {
         
-        if (!isValidEmail(user.email)) {
+        if (user.email && !isValidEmail(user.email)) {
             throw new Error('L\'email fourni est invalide.');
         }
-
-        if (!isValidPassword(user.password)) {
+    
+        if (user.password && !isValidPassword(user.password)) {
             throw new Error('Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, un chiffre et un caractère spécial.');
         }
 
