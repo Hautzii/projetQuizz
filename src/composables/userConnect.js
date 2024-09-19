@@ -4,31 +4,36 @@ import { useUsers } from '@/composables/useUsers';
 
 export function useUserConnect() {
     const API = "http://localhost:3000/user";
-    const { setLoggedInUser } = useUsers();
     const error = ref("");
 
     async function login(email, password) {
+
         try {
-          const res = await axios.get(API, {
-            params: { email }
-          });
-          console.log('dt :', res.data);
-          
           const normalizedEmail = email.trim().toLowerCase();
-          const user = res.data.find(user => user.email_user.toLowerCase() === normalizedEmail);
+            console.log('Email normalisé:', normalizedEmail);
+
+          const res = await axios.get(API, {
+            params: { email: normalizedEmail  }
+          });
+          console.log('Réponse de l\'API:', res.data);
+          
+          const user = res.data;
+          console.log('Utilisateur trouvé:', user);
     
           if (!user) {
             throw new Error("EMAIL_NOT_FOUND");
           }
+
+        if (user.email_user.toLowerCase() !== normalizedEmail) {
+            throw new Error("EMAIL_NOT_FOUND");
+        }
     
           if (user.mdp_user !== password) {
             throw new Error("PASSWORD_INCORRECT");
           }
-    
-          setLoggedInUser(user);
 
-          return user;
-    
+          return user ;
+
         } catch (e) {
           if (e.message === "EMAIL_NOT_FOUND") {
             error.value = "Email incorrect";

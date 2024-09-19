@@ -1,11 +1,11 @@
 <script setup>
 import { ref } from "vue";
 import { useUserConnect } from "@/composables/userConnect";
+import { useUserStore } from "@/stores/userStore";
 import { useRouter } from "vue-router";
-import { useUsers } from "@/composables/useUsers";
 
 const {login, error } = useUserConnect();
-const { setLoggedInUser, loggedInUser } = useUsers();
+const userStore = useUserStore();
 const router = useRouter();
 
 const email = ref("");
@@ -17,10 +17,10 @@ async function handleSubmit() {
     const user = await login(email.value, password.value);
     console.log('Utilisateur connecté :',user);
 
-    setLoggedInUser(user); // Définir l'utilisateur connecté
-    console.log('loggedInUser après connexion:', loggedInUser.value);
+    userStore.setUserId(user.ID);
+    userStore.setLoggedInUser(user);
 
-    router.push("/utilisateur");
+    router.push("/utilisateur");  
   } catch (e) {
     console.log(e);
   }

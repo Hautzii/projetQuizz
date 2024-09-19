@@ -3,35 +3,41 @@ import axios from "axios";
 
 export function useUsers() {
   const API = "http://localhost:3000/user";
-
   const loggedInUser = ref(null);
   const error = ref("");
-  
+  const isLoading = ref(true);
 
-  async function load() {
+  async function load(userId) {
     try {
-      if (!loggedInUser.value || !loggedInUser.value.id) return;
+      isLoading.value = true;
 
-      console.log('Chargement des infos de l\'utilisateur:', loggedInUser.value);
+      if (!userId) {
+        console.log("ID de l'utilisateur non fourni.");
+        isLoading.value = false;
+        return;
+      }
 
-      const res = await axios.get(`${API}/${loggedInUser.value.id}`);
+      console.log('Chargement des infos de l\'utilisateur:', userId);
+
+      const res = await axios.get(`${API}/${userId}`);
+      console.log('Réponse de l\'API lors du chargement:', res.data);
+
       loggedInUser.value = res.data;
+      console.log('Utilisateur après mise à jour:', loggedInUser.value);
+    
     } catch (e) {
-      console.log(e);
+      console.error('Erreur lors du chargement:', e);
       error.value = e.message;
+    }finally {
+      isLoading.value = false;
     }
   }
 
-  function setLoggedInUser(user) {
-    loggedInUser.value = user;
-    console.log('Utilisateur défini dans setLoggedInUser:', loggedInUser.value);
-    load();
-  }
 
   return { 
-    load,
-    loggedInUser, 
-    setLoggedInUser, 
+    loggedInUser,
+    load, 
     error, 
+    isLoading
   };
 }

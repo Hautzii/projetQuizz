@@ -1,29 +1,34 @@
 <script setup>
-import { ref, onMounted,watch} from "vue";
+import { onMounted } from "vue";
+import { useUserStore } from "@/stores/userStore";
 import { useUsers } from "@/composables/useUsers";
 
-const { loggedInUser, load} = useUsers();
+const userStore = useUserStore(); 
+const { loggedInUser, isLoading,load, error} = useUsers();
 
 onMounted(() => {
-  load(); 
-  console.log('Utilisateur dans userView.vue :', loggedInUser.value);
+  if (!loggedInUser.value && userStore.userId) {
+    console.log("Chargement des informations utilisateur...");
+    load(userStore.userId);  // Appel pour charger les infos de l'utilisateur
+  }
 });
 
-watch(loggedInUser, (newValue) => {
-  console.log('Changement dans loggedInUser:', newValue); // Surveillez les changements
-});
-
-const showPassword = ref(false);
-const errorMessage = ref("");
-const successMessage = ref("");
-
+console.log('loggedInUser (avant changement):', loggedInUser.value);
+console.log('isLoading (avant changement):', isLoading.value);
+console.log('error (avant changement):', error.value);
 
 </script>
 
 <template>
-  <div v-if="loggedInUser && loggedInUser.name_user">
+  <div v-if="isLoading">
+    <p>Chargement des informations de l'utilisateur...</p>
+  </div>
+  <div v-else-if="error">
+    <p class="error">Erreur: {{ error }}</p>
+  </div>
+  <div v-else>
     <h2>Mon Profil</h2>
-    <div>
+    <div v-if="loggedInUser">
       <p>Nom d'utilisateur : {{ loggedInUser.name_user }}</p>
       <p>
         Email : {{ loggedInUser.email_user }} <button>Modifier</button> 
@@ -33,11 +38,12 @@ const successMessage = ref("");
       </p>
       <button>Supprimer</button>
     </div>
-  </div>
     <div v-else>
-    <p>Chargement des informations de l'utilisateur...</p>
+      <p>Aucune information utilisateur disponible.</p>
+    </div>
   </div>
 </template>
+
 
 <style scoped>
 .error {
