@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from "vue";
+import NavBar from "../../components/NavBar.vue";
 
 // State variables
 const numberOfQuestions = ref(5);
@@ -144,6 +145,7 @@ const finishGame = () => {
 
 <template>
   <div class="main-container">
+    <NavBar />
     <form @submit.prevent="startGame" v-if="!activeGame && !quizFinished">
       <label for="numberOfQuestions">Number of questions</label>
       <input type="number" id="questions" v-model="numberOfQuestions" />
