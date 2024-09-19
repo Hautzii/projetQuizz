@@ -9,33 +9,34 @@ const router = useRouter();
 const username = ref("");
 const email = ref("");
 const password = ref("");
+
 const showPassword = ref(false);
 const errorMessage = ref("");
 const successMessage = ref("");
 
 async function handleCreate() {
-  const user = {
-    username: username.value,
-    email: email.value,
-    password: password.value,
-  };
-
-  try {
-    await create(user);
-    successMessage.value = "Utilisateur créé avec succès";
-    errorMessage.value = "";
-
-    username.value = "";
-    email.value = "";
-    password.value = "";
-    
-    // router.push("/connexion");
-    //setTimeout(() => router.push('/connexion'), 2000);
-  } catch (e) {
-      errorMessage.value = e.message;
-      successMessage.value = "";
+        const user = {
+          username: username.value,
+          email: email.value,
+          password: password.value,
+        };
+      
+        try {
+          await create(user);
+          successMessage.value = "Utilisateur créé avec succès";
+          errorMessage.value = "";
+      
+          username.value = "";
+          email.value = "";
+          password.value = "";
+          
+          // router.push("/connexion");
+          //setTimeout(() => router.push('/connexion'), 2000);
+        } catch (e) {
+            errorMessage.value = e.message;
+            successMessage.value = "";
+          }
     }
-  }
 
 </script>
 
@@ -45,7 +46,7 @@ async function handleCreate() {
     <form @submit.prevent="handleCreate">
       <div>
         <label for="username">Nom d'utilisateur : </label>
-        <input type="text" v-model="username" id="username" required />
+        <input type="text" v-model="username" id="username" />
       </div>
       <div>
         <label for="email">Email : </label>

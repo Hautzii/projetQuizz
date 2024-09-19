@@ -31,5 +31,48 @@ export function useUpdateUser() {
             throw new Error(e.response?.data?.message || 'Erreur lors de la mise à jour de l\'utilisateur.');
         }
     }
+
+    async function saveUser() {
+        if (!selectedUser.value) return;
+      
+        const updatedUser = { ...selectedUser.value };
+      
+        if (editingField.value === "email" && updatedEmail.value) {
+          updatedUser.email = updatedEmail.value;
+        }
+      
+        if (editingField.value === "password" && updatedPassword.value) {
+          updatedUser.password = updatedPassword.value;
+        }
+        if (selectedUser.value) {
+          try {
+      
+            await update(selectedUser.value.id, updatedUser);
+            selectedUser.value = null;
+            editingField.value = "";
+      
+            updatedEmail.value = "";
+            updatedPassword.value = "";
+            alert('Utilisateur modifié avec succès')
+            // successMessage.value = "Utilisateur modifié avec succès";
+            load();
+          } catch (e) {
+            console.error("Erreur lors de la mise à jour :", e);
+            errorMessage.value = e.message;
+            successMessage.value = "";
+          }
+        }
+      }
+
+      function editUser(user, field) {
+        selectedUser.value = user;
+        editingField.value = field;
+      
+        if (field === "email") {
+          updatedEmail.value = user.email;
+        } else if (field === "password") {
+          updatedPassword.value = user.password;
+        }
+      }
     return {update}
 }

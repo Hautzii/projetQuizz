@@ -2,7 +2,8 @@ import axios from "axios";
 import { useValidator } from "./useValidator";
 
 export function useCreateUser() {
-    const API = 'http://localhost:3000/users/';
+    const API = 'http://localhost:3000/user';
+    const APIcreate = 'http://localhost:3000/user/create';
     const { isValidEmail, isValidPassword } = useValidator();
 
     async function create(user) {
@@ -16,19 +17,19 @@ export function useCreateUser() {
         }
 
         try {
-            const res = await axios.get(API);
-            const existingUser = res.data.find(u => u.email === user.email || u.username === user.username);
+            const res = await axios.get(API); 
+            const existingUser = res.data.find(u => u.email_user === user.email || u.name_user === user.username);
 
             if (existingUser) {
-                if (existingUser.email === user.email) {
+                if (existingUser.email_user === user.email) {
                     throw new Error('EMAIL_ALREADY_EXISTS');
                 }
-                if (existingUser.username === user.username) {
+                if (existingUser.name_user === user.username) {
                     throw new Error('USERNAME_ALREADY_EXISTS');
                 }
             }
 
-            const createRes = await axios.post(API, user); 
+            const createRes = await axios.post(APIcreate, user); 
             return createRes.data;
 
         } catch (e) {
@@ -44,5 +45,6 @@ export function useCreateUser() {
             }
         }
     }
+
     return { create };
 }
