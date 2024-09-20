@@ -10,15 +10,11 @@ export function useUserConnect() {
 
         try {
           const normalizedEmail = email.trim().toLowerCase();
-            console.log('Email normalisé:', normalizedEmail);
-
           const res = await axios.get(API, {
             params: { email: normalizedEmail  }
           });
-          console.log('Réponse de l\'API:', res.data);
           
           const user = res.data;
-          console.log('Utilisateur trouvé:', user);
     
           if (!user) {
             throw new Error("EMAIL_NOT_FOUND");

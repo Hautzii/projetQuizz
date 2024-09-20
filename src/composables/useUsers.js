@@ -12,19 +12,12 @@ export function useUsers() {
       isLoading.value = true;
 
       if (!userId) {
-        console.log("ID de l'utilisateur non fourni.");
         isLoading.value = false;
         return;
       }
-
-      console.log('Chargement des infos de l\'utilisateur:', userId);
-
       const res = await axios.get(`${API}/${userId}`);
-      console.log('Réponse de l\'API lors du chargement:', res.data);
 
       loggedInUser.value = res.data;
-      console.log('Utilisateur après mise à jour:', loggedInUser.value);
-    
     } catch (e) {
       console.error('Erreur lors du chargement:', e);
       error.value = e.message;
@@ -32,7 +25,6 @@ export function useUsers() {
       isLoading.value = false;
     }
   }
-
 
   return { 
     loggedInUser,

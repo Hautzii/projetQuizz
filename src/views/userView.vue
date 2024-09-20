@@ -1,21 +1,21 @@
 <script setup>
-import { onMounted } from "vue";
+import { ref,onMounted } from "vue";
 import { useUserStore } from "@/stores/userStore";
 import { useUsers } from "@/composables/useUsers";
+import { useUpdateUser } from "@/composables/useUpdateUsers";
 
 const userStore = useUserStore(); 
 const { loggedInUser, isLoading,load, error} = useUsers();
+const { editUser, saveUser,selectedUser,editingField,updatedEmail,updatedPassword,errorMessage, successMessage }= useUpdateUser(load);
+
+const showPassword = ref(false);
 
 onMounted(() => {
   if (!loggedInUser.value && userStore.userId) {
-    console.log("Chargement des informations utilisateur...");
-    load(userStore.userId);  // Appel pour charger les infos de l'utilisateur
+    load(userStore.userId);  
   }
 });
 
-console.log('loggedInUser (avant changement):', loggedInUser.value);
-console.log('isLoading (avant changement):', isLoading.value);
-console.log('error (avant changement):', error.value);
 
 </script>
 
@@ -31,17 +31,53 @@ console.log('error (avant changement):', error.value);
     <div v-if="loggedInUser">
       <p>Nom d'utilisateur : {{ loggedInUser.name_user }}</p>
       <p>
-        Email : {{ loggedInUser.email_user }} <button>Modifier</button> 
+        Email : {{ loggedInUser.email_user }}
+        <button v-if="loggedInUser" @click="editUser(loggedInUser, 'email')">Modifier</button> 
       </p>
       <p>
-        Mot de passe : ******** <button>Modifier</button>
+        Mot de passe : ******** 
+        <button @click="editUser(loggedInUser, 'password')">Modifier</button>
       </p>
-      <button>Supprimer</button>
+      <button  @click="remove(loggedInUser.id)">Supprimer</button>
     </div>
     <div v-else>
       <p>Aucune information utilisateur disponible.</p>
     </div>
   </div>
+
+<div v-if="selectedUser">
+      <h3>
+        Modifier {{ editingField === "email" ? "l'email" : "le mot de passe" }}
+      </h3>
+      <form @submit.prevent="saveUser">
+        <div v-if="editingField === 'email'">
+          <label for="email"> Email : </label>
+          <input
+            type="email"
+            id="email"
+            v-model="updatedEmail"
+            placeholder="Entrez un nouvel email"
+          />
+        </div>
+        <div v-if="editingField === 'password'">
+          <label for="password">Mot de passe :</label>
+          <input
+            :type="showPassword ? 'text' : 'password'"
+            v-model="updatedPassword"
+            placeholder="Entrez un nouveau mot de passe"
+          />
+          <div>
+            <input type="checkbox" id="show-password" v-model="showPassword" />
+            <label for="show-password">Afficher le mot de passe</label>
+          </div>
+        </div>
+        <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+        <p v-if="successMessage" class="success">{{ successMessage }}</p>
+        <button type="submit">Enregistrer les modifications</button>
+      </form>
+      <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+        <p v-if="successMessage" class="success">{{ successMessage }}</p>
+    </div>
 </template>
 
 

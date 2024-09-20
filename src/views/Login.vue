@@ -15,7 +15,6 @@ const showPassword = ref(false);
 async function handleSubmit() {
   try {
     const user = await login(email.value, password.value);
-    console.log('Utilisateur connecté :',user);
 
     userStore.setUserId(user.ID);
     userStore.setLoggedInUser(user);

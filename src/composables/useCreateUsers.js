@@ -2,7 +2,7 @@ import axios from "axios";
 import { useValidator } from "./useValidator";
 
 export function useCreateUser() {
-    const API = 'http://localhost:3000/user';
+    const APIRead = 'http://localhost:3000/user/use';
     const APIcreate = 'http://localhost:3000/user/create';
     const { isValidEmail, isValidPassword } = useValidator();
 
@@ -17,7 +17,7 @@ export function useCreateUser() {
         }
 
         try {
-            const res = await axios.get(API); 
+            const res = await axios.get(APIRead); 
             const existingUser = res.data.find(u => u.email_user === user.email || u.name_user === user.username);
 
             if (existingUser) {

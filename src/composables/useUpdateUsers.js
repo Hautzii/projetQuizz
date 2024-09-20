@@ -1,9 +1,70 @@
 import axios from "axios";
+import {ref} from "vue";
 import { useValidator } from "./useValidator";
 
 export function useUpdateUser() {
-    const API = 'http://localhost:3000/users/';
+    const API = 'http://localhost:3000/user/use';
+    const APIUpdate = 'http://localhost:3000/user/update/';
     const { isValidEmail, isValidPassword } = useValidator();
+
+    const selectedUser = ref(null);
+  const editingField = ref("");
+  const updatedEmail = ref("");
+  const updatedPassword = ref("");
+  const errorMessage = ref("");
+  const successMessage = ref("");
+
+  function editUser(user, field) {
+    console.log('editUser appelé avec', user, field); // Pour vérifier si la fonction est appelée
+  if (!user) {
+    console.error("L'utilisateur est indéfini.");
+    return;
+  }
+
+    selectedUser.value = user;
+    editingField.value = field;
+
+    if (field === "email") {
+      updatedEmail.value = user.email_user;
+    } else if (field === "password") {
+      updatedPassword.value = ""; // Ne jamais pré-remplir le mot de passe
+    }
+  }
+
+  async function saveUser() {
+    console.log('saveUser appelé');
+    if (!selectedUser.value) return;
+
+    const updatedUser = { ...selectedUser.value };
+
+    if (editingField.value === "email" && updatedEmail.value) {
+      updatedUser.email_user = updatedEmail.value;
+    }else {
+      updatedUser.email_user = undefined; 
+    }
+
+    if (editingField.value === "password" && updatedPassword.value) {
+      updatedUser.mdp_user = updatedPassword.value;
+    }else {
+      updatedUser.mdp_user = undefined;
+    }
+
+    try {
+      await update(selectedUser.value.id, updatedUser);
+      selectedUser.value = null;
+      editingField.value = "";
+
+      updatedEmail.value = "";
+      updatedPassword.value = "";
+      successMessage.value = "Utilisateur modifié avec succès";
+
+      load(updatedUser.id); 
+    } catch (e) {
+      console.error("Erreur lors de la mise à jour :", e);
+      errorMessage.value = e.message;
+      successMessage.value = "";
+    }
+  }
 
     async function update(id, user) {
         
@@ -17,13 +78,15 @@ export function useUpdateUser() {
 
         try {
             const res = await axios.get(API);
-            const existingUser = res.data.find(u => u.email === user.email && u.id !== id);
+            console.log(res.data);
+            
+            const existingUser = res.data.find(u => u.email_user === user.email_user && u.ID !== id);
 
             if (existingUser) {
                 throw new Error('Cet email est déjà utilisé par un autre utilisateur.');
             }
 
-            const updateRes = await axios.put(API + id, user);
+            const updateRes = await axios.put(APIUpdate + id);
             return updateRes.data;
             
         } catch (e) {
@@ -32,47 +95,5 @@ export function useUpdateUser() {
         }
     }
 
-    async function saveUser() {
-        if (!selectedUser.value) return;
-      
-        const updatedUser = { ...selectedUser.value };
-      
-        if (editingField.value === "email" && updatedEmail.value) {
-          updatedUser.email = updatedEmail.value;
-        }
-      
-        if (editingField.value === "password" && updatedPassword.value) {
-          updatedUser.password = updatedPassword.value;
-        }
-        if (selectedUser.value) {
-          try {
-      
-            await update(selectedUser.value.id, updatedUser);
-            selectedUser.value = null;
-            editingField.value = "";
-      
-            updatedEmail.value = "";
-            updatedPassword.value = "";
-            alert('Utilisateur modifié avec succès')
-            // successMessage.value = "Utilisateur modifié avec succès";
-            load();
-          } catch (e) {
-            console.error("Erreur lors de la mise à jour :", e);
-            errorMessage.value = e.message;
-            successMessage.value = "";
-          }
-        }
-      }
-
-      function editUser(user, field) {
-        selectedUser.value = user;
-        editingField.value = field;
-      
-        if (field === "email") {
-          updatedEmail.value = user.email;
-        } else if (field === "password") {
-          updatedPassword.value = user.password;
-        }
-      }
-    return {update}
+    return {editUser,saveUser,update,selectedUser,editingField,updatedEmail,updatedPassword,errorMessage,successMessage}
 }
