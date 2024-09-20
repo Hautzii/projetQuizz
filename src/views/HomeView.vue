@@ -37,7 +37,7 @@ const navigateTo = (route) => {
 </script>
 
 <template>
-  <div class="home">
+  <div class="home content-container">
     <NavBar />
     
     <h1>Welcome to the Quiz Game!</h1>
@@ -68,10 +68,16 @@ const navigateTo = (route) => {
 </template>
 
 <style scoped>
+.content-container {
+  padding-top: 80px;
+}
+
 .home {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  height: 100vh;
   padding: 2rem;
   max-width: 800px;
   margin: 0 auto;
@@ -185,5 +191,21 @@ nav li:hover {
 .start-quiz-button {
   font-size: 1.2rem;
   padding: 0.75rem 1.5rem;
+}
+
+@media screen and (max-width: 600px) {
+  h1, p {
+    text-align: center;
+  }
+  p {
+    margin-top: 1rem;
+    line-height: 1.5;
+  }
+}
+
+@media screen and (min-width: 1200px) and (max-width: 1280px) {
+  .home {
+    margin-top: 2rem;
+  }
 }
 </style>

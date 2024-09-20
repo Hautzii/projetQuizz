@@ -20,15 +20,20 @@ const navigateTo = (route) => {
 
 <style scoped>
 nav {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  margin-bottom: 2rem;
+  background-color: transparent;
+  z-index: 1000;
 }
 
 nav ul {
   display: flex;
   justify-content: space-around;
   list-style-type: none;
-  padding: 0;
+  padding: 1rem 0;
+  margin: 0;
 }
 
 nav li {

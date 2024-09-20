@@ -144,7 +144,7 @@ const finishGame = () => {
 </script>
 
 <template>
-  <div class="main-container">
+  <div class="main-container content-container">
     <NavBar />
     <form @submit.prevent="startGame" v-if="!activeGame && !quizFinished">
       <label for="numberOfQuestions">Number of questions</label>
@@ -253,7 +253,6 @@ const finishGame = () => {
 </template>
 
 <style scoped>
-/* Define variables */
 .main-container {
   --primary-color: #41b883;
   --primary-hover-color: #329066;
@@ -274,6 +273,10 @@ const finishGame = () => {
   margin: auto;
   padding: 20px;
   box-sizing: border-box;
+}
+
+.content-container {
+  padding-top: 80px; /* Adjust this value based on your navbar height */
 }
 
 .game {
