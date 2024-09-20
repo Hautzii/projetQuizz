@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from "vue";
-import NavBar from "../../components/NavBar.vue";
+import NavBar from "../components/NavBar.vue";
 
 // State variables
 const numberOfQuestions = ref(5);

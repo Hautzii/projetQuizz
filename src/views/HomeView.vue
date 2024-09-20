@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import NavBar from "../../components/NavBar.vue";
+import NavBar from "../components/NavBar.vue"
 
 const router = useRouter();
 const score = ref(0);
@@ -79,7 +79,7 @@ const navigateTo = (route) => {
     <div class="sample-quiz">
       <h2>{{ sampleQuestions[currentQuestionIndex].question }}</h2>
       <p v-if="currentQuestionIndex === 0 && score > 0">
-        Final Score: {{ score }} / {{ sampleQuestions.length }}
+        Your Score: {{ score }} / {{ sampleQuestions.length }}
       </p>
       <div class="answer-buttons">
         <button

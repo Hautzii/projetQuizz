@@ -1,6 +1,5 @@
 import { ref } from 'vue';
 import axios from 'axios';
-import { useUsers } from '@/composables/useUsers';
 
 export function useUserConnect() {
     const API = "http://localhost:3000/user";
